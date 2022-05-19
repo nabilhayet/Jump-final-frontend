@@ -1,6 +1,6 @@
-// ./src/components/authors/CreateAuthor.js
 import React, { Component } from 'react'
-// import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom';
+
 
 
 class CreateUser extends Component {
@@ -11,9 +11,10 @@ class CreateUser extends Component {
             password: "",
             name: "",
             email: "",
-            contact: "",
+            phoneNumber: "",
             gotUser: false,
-            id: ""
+            id: "",
+            role: ""
 
         }
     }
@@ -24,31 +25,38 @@ class CreateUser extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault()
+        const employee = {
+            name: this.state.name, email: this.state.email, phoneNumber: this.state.phoneNumber,
+            user:
+                { username: this.state.username, password: this.state.password, role: this.state.role }
+        }
+        this.createNewEmployee(employee)
 
-        const user = { username: this.state.username, password: this.state.password }
-        this.createNewUser(user)
 
     }
-    createNewUser = (user) => {
+    createNewEmployee = (employee) => {
         const configobj = {
             method: 'POST',
-            body: JSON.stringify(user),
+            body: JSON.stringify(employee),
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*"
             }
+
         }
-        fetch('http://localhost:3000/users', configobj)
+        console.log(this.state.role);
+        fetch('http://localhost:8080/api/employees/add', configobj)
             .then(response => response.json())
-            .then(user => {
-                this.props.addUser(user)
+            .then(employee => {
                 this.setState({
                     gotUser: true,
-                    id: user.id
+                    id: employee.id
                 })
 
             })
     }
+
     render() {
         return (
             <div class="row">
@@ -87,8 +95,16 @@ class CreateUser extends Component {
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="contact">Contact</label>
-                            <input class="form-control" type="text" id="contact" name="contact" onChange={this.handleChange} value={this.state.contact} required />
+                            <label class="form-label" for="contact">phoneNumber</label>
+                            <input class="form-control" type="text" id="phoneNumber" name="phoneNumber" onChange={this.handleChange} value={this.state.phoneNumber} required />
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="role">Role</label>
+                            <input class="form-control" type="text" id="role" name="role" onChange={this.handleChange} value={this.state.role} required />
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -98,7 +114,9 @@ class CreateUser extends Component {
                             <button class="btn-success">Add User</button>
                         </div>
 
-                        {/* <input type="submit" class="btn" /> */}
+                        {this.state.gotUser && <Navigate to="/users/login" replace={true} />
+
+                        }
                     </form>
                 </div>
             </div>
