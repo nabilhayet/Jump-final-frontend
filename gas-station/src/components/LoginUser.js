@@ -1,6 +1,6 @@
 // ./src/components/authors/CreateAuthor.js
 import React, { Component } from 'react'
-// import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom';
 
 
 class CreateUser extends Component {
@@ -8,7 +8,9 @@ class CreateUser extends Component {
         super()
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            role: "",
+            id: ""
 
         }
     }
@@ -20,7 +22,7 @@ class CreateUser extends Component {
     handleSubmit = (event) => {
         event.preventDefault()
 
-        const user = { username: this.state.username, password: this.state.password }
+        const user = { username: this.state.username, password: this.state.password, role: this.state.role }
         this.createNewUser(user)
 
     }
@@ -30,16 +32,16 @@ class CreateUser extends Component {
             body: JSON.stringify(user),
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*"
             }
         }
-        fetch('http://localhost:3000/users', configobj)
+        fetch('http://localhost:8080/api/authenticate', configobj)
             .then(response => response.json())
             .then(user => {
-                this.props.addUser(user)
                 this.setState({
                     gotUser: true,
-                    id: user.id
+                    id: user
                 })
 
             })
@@ -68,10 +70,19 @@ class CreateUser extends Component {
                         </div>
 
                         <div class="mb-3">
-                            <button class="btn-success">Add User</button>
+                            <label class="form-label" for="role">Role</label>
+                            <input class="form-control" type="text" id="role" name="role" onChange={this.handleChange} value={this.state.role} required />
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
                         </div>
 
-                        {/* <input type="submit" class="btn" /> */}
+                        <div class="mb-3">
+                            <button class="btn-success">Login</button>
+                        </div>
+                        {this.state.gotUser && <Navigate to={`/users/${this.state.id}`} replace={true} />
+
+                        }
                     </form>
                 </div>
             </div>
