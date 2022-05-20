@@ -1,6 +1,6 @@
 import React from 'react';
 
-
+import { user_id } from './LoginUser';
 
 class ViewOrders extends React.Component {
 
@@ -17,17 +17,11 @@ class ViewOrders extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8080/api/purchases')
+        fetch(`http://localhost:8080/api/users/${user_id}/purchases`)
             .then(response => response.json())
-            .then(orders => {
-                debugger
-                orders.forEach(order => {
-                    if (order.id != "" && order.cost != "") {
-                        this.setState({
-                            orders: [...this.state.orders, order]
-                        })
-                    }
-
+            .then(data => {
+                this.setState({
+                    orders: data
                 })
             })
     }
@@ -36,13 +30,12 @@ class ViewOrders extends React.Component {
         const getAllOrders = this.state.orders.map((order) => {
             return (
                 <div>
-                    <table class="content-table">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Order Id</th>
-                                <th>Cost</th>
-                                <th>Purchase Date</th>
-                                <th>Employee Id</th>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Order Cost</th>
+                                <th scope="col">Order Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -50,7 +43,6 @@ class ViewOrders extends React.Component {
                                 <td>   {order.id}</td>
                                 <td>  {order.cost}</td>
                                 <td>   {order.purchaseDate}</td>
-                                <td>  {order.employee_id}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Navigate } from 'react-router-dom';
 
-
+import { user_id } from './LoginUser';
 
 class CreateOrder extends Component {
     constructor() {
@@ -10,9 +10,25 @@ class CreateOrder extends Component {
 
             id: "",
             cost: "",
-            purchase_date: "",
-            employe_id: ""
+            purchaseDate: "",
+            employe_id: 0,
+            gotUser: "",
+            employe: "",
+            gotOrder: false
         }
+    }
+
+    componentDidMount() {
+        fetch(`http://localhost:8080/api/${this.props.user_id}`)
+            .then(response => response.json())
+            .then(employe => {
+                console.log(employe);
+                this.setState({
+                    gotUser: true,
+                    employe: employe
+                })
+
+            })
     }
     handleChange = (event) => {
         this.setState({
@@ -21,11 +37,8 @@ class CreateOrder extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault()
-
-        const order = { cost: this.state.cost, purchase_date: this.state.purchase_date, employee_id: Number(this.props.user_id) }
+        const order = { cost: this.state.cost, purchaseDate: this.state.purchaseDate, employee: { id: this.state.employe.id } }
         this.createNewOrder(order)
-
-
     }
     createNewOrder = (order) => {
         const configobj = {
@@ -46,7 +59,6 @@ class CreateOrder extends Component {
                     gotOrder: true,
                     id: order.id
                 })
-
             })
     }
 
@@ -66,8 +78,8 @@ class CreateOrder extends Component {
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="purchase_date">Date</label>
-                            <input class="form-control" type="date" id="purchase_date" name="purchase_date" onChange={this.handleChange} value={this.state.purchase_date} required />
+                            <label class="form-label" for="purchaseDate">Date</label>
+                            <input class="form-control" type="date" id="purchaseDate" name="purchaseDate" onChange={this.handleChange} value={this.state.purchaseDate} required />
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -76,11 +88,8 @@ class CreateOrder extends Component {
                         <div class="mb-3">
                             <button class="btn-success">Place Order</button>
                         </div>
-
-                        {this.state.gotOrder && <Navigate to="/orders" replace={true} />
-
-                        }
                     </form>
+                    {this.state.gotOrder && <Navigate to="/orders" replace={true} />}
                 </div>
             </div>
 

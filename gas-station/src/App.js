@@ -18,7 +18,7 @@ function App() {
         <Route path="/users/login" element={<LoginUser />} />
         <Route exact path='/users/:id' element={<ProfileUser />} />
         <Route path="/orders" element={<ViewOrders />} />
-        <Route path="/orders/new" element={<CreateOrder authed={true} />} />
+        <Route path="/orders/new" element={<CreateOrder />} />
       </Routes>
     </div>
   );

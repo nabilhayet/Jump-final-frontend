@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Navigate } from 'react-router-dom';
 
-
+import { user_id } from './LoginUser';
 
 class CreateUser extends Component {
     constructor() {

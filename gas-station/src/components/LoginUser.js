@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { Navigate } from 'react-router-dom';
 
+export let user_id = 0;
 
 class CreateUser extends Component {
     constructor() {
@@ -39,6 +40,7 @@ class CreateUser extends Component {
         fetch('http://localhost:8080/api/authenticate', configobj)
             .then(response => response.json())
             .then(user => {
+                user_id = user
                 this.setState({
                     gotUser: true,
                     id: user
